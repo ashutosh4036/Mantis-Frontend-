@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // assets
 import { QuestionOutlined } from '@ant-design/icons';
 

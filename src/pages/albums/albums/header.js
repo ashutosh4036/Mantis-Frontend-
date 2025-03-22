@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, AppBar, Toolbar, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import {fetchDeleteDataWithAuth} from 'client/client'
+import { fetchDeleteDataWithAuth } from 'client/client';
 
 const Header = () => {
   const location = useLocation();
@@ -14,20 +14,15 @@ const Header = () => {
     if (isConfirmed) {
       // Perform delete operation
       console.log('Item deleted!');
-      fetchDeleteDataWithAuth('/albums/'+id+"/delete")
-      .then(res => {
-        console.log(res)
-        window.location.href = '/'; 
-      })
-
-      
+      fetchDeleteDataWithAuth('/albums/' + id + '/delete').then((res) => {
+        console.log(res);
+        window.location.href = '/';
+      });
     } else {
       console.log('Delete operation cancelled');
-      
     }
+  };
 
-  }
-  
   return (
     <AppBar position="static">
       <Toolbar>
@@ -44,7 +39,7 @@ const Header = () => {
         >
           Edit Album
         </Button>
-  
+
         <Button
           component={Link}
           to={`/album/upload?id=${id}`}

@@ -2,51 +2,49 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useEffect } from 'react';
-import {fetchPutDataWithAuth, fetchGetDataWithAuth} from 'client/client';
+import { fetchPutDataWithAuth, fetchGetDataWithAuth } from 'client/client';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-
 const EditAlbumForm = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const album_id = queryParams.get('id'); // Extract album ID from URL query parameters
-    useEffect(() => {
-        const isLoggedIn = localStorage.getItem('token');
-        if (!isLoggedIn) {
-          navigate('/login');
-          window.location.reload()
-        } 
-      
-        fetchGetDataWithAuth("/albums/"+album_id)
-        .then(res =>{
-          if (res.data){
-            setFormData(prevFormData => ({
-              ...prevFormData,
-              name:res.data.name,
-              description: res.data.description
-            }))
-          }
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const album_id = queryParams.get('id'); // Extract album ID from URL query parameters
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('token');
+    if (!isLoggedIn) {
+      navigate('/login');
+      window.location.reload();
+    }
 
-        })
-      }, []); 
-
-    const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    fetchGetDataWithAuth('/albums/' + album_id).then((res) => {
+      if (res.data) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          name: res.data.name,
+          description: res.data.description
+        }));
+      }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    description: ''
+  });
 
   const [errors, setErrors] = useState({
     name: '',
-    description: '',
+    description: ''
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -71,19 +69,18 @@ const EditAlbumForm = () => {
 
     // If form is valid, you can proceed with further actions
     if (isValid) {
-        const payload = {
-            name: formData.name,
-            description: formData.description,
-          };
+      const payload = {
+        name: formData.name,
+        description: formData.description
+      };
 
-      fetchPutDataWithAuth("/albums/"+album_id+"/update",payload)
-      .then((response) => {
-        console.log(response)
-       
-        
-      }) .catch((error) => {
+      fetchPutDataWithAuth('/albums/' + album_id + '/update', payload)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
           console.error('Login error:', error);
-    });
+        });
       console.log('Form submitted:');
       navigate('/login');
     }

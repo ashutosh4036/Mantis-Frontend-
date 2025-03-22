@@ -9,11 +9,7 @@ import MobileSection from './MobileSection';
 const HeaderContent = () => {
   const matchesXs = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
-  return (
-    <>
-      {matchesXs && <MobileSection />}
-    </>
-  );
+  return <>{matchesXs && <MobileSection />}</>;
 };
 
 export default HeaderContent;

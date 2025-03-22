@@ -2,52 +2,51 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useEffect } from 'react';
-import {fetchPutDataWithAuth} from 'client/client';
+import { fetchPutDataWithAuth } from 'client/client';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-
 const EditPhotoForm = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const album_id = queryParams.get('album_id');
-    const photo_id = queryParams.get('photo_id');
-    const photo_name = queryParams.get('photo_name');
-    let photo_desc = queryParams.get('photo_desc');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const album_id = queryParams.get('album_id');
+  const photo_id = queryParams.get('photo_id');
+  const photo_name = queryParams.get('photo_name');
+  let photo_desc = queryParams.get('photo_desc');
 
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('token');
+    if (!isLoggedIn) {
+      navigate('/login');
+      window.location.reload();
+    }
+    if (photo_desc == 'null') {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      photo_desc = '';
+    }
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      name: photo_name,
+      description: photo_desc
+    }));
+  }, [navigate]);
 
-    useEffect(() => {
-        const isLoggedIn = localStorage.getItem('token');
-        if (!isLoggedIn) {
-          navigate('/login');
-          window.location.reload()
-        } 
-        if (photo_desc == 'null'){
-          photo_desc = ""
-        }
-        setFormData(prevFormData => ({
-          ...prevFormData,
-          name: photo_name,
-          description: photo_desc
-        }));
-      }, [navigate]); 
-
-    const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     name: '',
-    description: '',
-    });
+    description: ''
+  });
 
   const [errors, setErrors] = useState({
     name: '',
-    description: '',
+    description: ''
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -72,19 +71,18 @@ const EditPhotoForm = () => {
 
     // If form is valid, you can proceed with further actions
     if (isValid) {
-        const payload = {
-            name: formData.name,
-            description: formData.description,
-          };
+      const payload = {
+        name: formData.name,
+        description: formData.description
+      };
 
-      fetchPutDataWithAuth("/albums/"+album_id+"/photos/"+photo_id+"/update",payload)
-      .then((response) => {
-        console.log(response)
-       
-        
-      }) .catch((error) => {
+      fetchPutDataWithAuth('/albums/' + album_id + '/photos/' + photo_id + '/update', payload)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
           console.error('Login error:', error);
-    });
+        });
       console.log('Form submitted:');
       navigate('/login');
     }
